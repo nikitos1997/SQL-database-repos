@@ -13,8 +13,7 @@ CREATE TABLE Students (
   DOB DATE NOT NULL,
   GENDER BOOLEAN NOT NULL, 
   AvailableBalance DECIMAL(5,2) NOT NULL, 
-  PRIMARY KEY (StudentID),
-  UNIQUE KEY 'StudentID' ('StudentID')
+  PRIMARY KEY (StudentID)
 );
 
 DROP TABLE IF EXISTS Tutors CASCADE;
@@ -24,8 +23,7 @@ CREATE TABLE Staff (
   StaffID INTEGER NOT NULL UNIQUE, 
   StaffFirstName VARCHAR(15) NOT NULL, 
   StaffLastName VARCHAR(25) NOT NULL, 
-  PRIMARY KEY (TutorID),
-  UNIQUE KEY 'StaffID' ('StaffID')
+  PRIMARY KEY (StaffID)
 );
 
 DROP TABLE IF EXISTS Courses CASCADE;
@@ -35,11 +33,11 @@ CREATE TABLE Courses (
   CourseID VARCHAR(255) NOT NULL UNIQUE, 
   CourseTitle VARCHAR(35) NOT NULL, 
   Subject VARCHAR(25) NOT NULL, 
-  FullTime/PartTime BOOLEAN NOT NULL, 
+  FullTime BOOLEAN DEFAULT NULL, 
+  PartTime BOOLEAN DEFAULT NULL,
   StartDate DATE NOT NULL,
   EndDate DATE NOT NULL,
-  PRIMARY KEY (CourseID),
-  UNIQUE KEY 'CourseID' ('CourseID') 
+  PRIMARY KEY (CourseID)
 ); 
 
 DROP TABLE IF EXISTS Departments CASCADE;
@@ -49,8 +47,7 @@ CREATE TABLE Departments (
   DepartmentID VARCHAR(255) NOT NULL UNIQUE, 
   DepartmentName VARCHAR(35) NOT NULL, 
   CampusName VARCHAR(30) NOT NULL, 
-  PRIMARY KEY (DepartmentID),
-  UNIQUE KEY 'DepartmentID' ('DepartmentID')
+  PRIMARY KEY (DepartmentID)
 );
 
 DROP TABLE IF EXISTS BursaryRequests CASCADE;
@@ -58,7 +55,7 @@ DROP TABLE IF EXISTS BursaryRequests CASCADE;
 /*Creating bursary requests table */
 CREATE TABLE BursaryRequests (
   RequestID INTEGER NOT NULL AUTO_INCREMENT, 
-  CourseID VARCHAR(255) NOT NULL, 
+  CourseID VARCHAR NOT NULL, 
   StaffID INTEGER NOT NULL, 
   Justification VARCHAR(200) NOT NULL, 
   TutorComments VARCHAR(200), 
@@ -114,7 +111,7 @@ CREATE TABLE DepartmentsWithStudentsCoursesAndTutors (
   StudentID INTEGER NOT NULL, 
   CourseID VARCHAR(255) NOT NULL,
   StudentStatus VARCHAR(20) NOT NULL,
-  PRIMARY KEY (DepartmentID, TutorID, StudentID, CourseID),
+  PRIMARY KEY (DepartmentID, StaffID, StudentID, CourseID),
   FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID),
   FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
   FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
