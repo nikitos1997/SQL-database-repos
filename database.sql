@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS BursaryRequests CASCADE;
 /*Creating bursary requests table */
 CREATE TABLE BursaryRequests (
   RequestID INTEGER NOT NULL AUTO_INCREMENT, 
-  CourseID VARCHAR NOT NULL, 
+  CourseID VARCHAR(255) NOT NULL, 
   StaffID INTEGER NOT NULL, 
   Justification VARCHAR(200) NOT NULL, 
   TutorComments VARCHAR(200), 
