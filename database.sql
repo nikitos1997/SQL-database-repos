@@ -16,7 +16,7 @@ CREATE TABLE Students (
   PRIMARY KEY (StudentID)
 );
 
-DROP TABLE IF EXISTS Tutors CASCADE;
+DROP TABLE IF EXISTS Staff CASCADE;
 
 /*Creating tutors table */
 CREATE TABLE Staff (
@@ -26,6 +26,15 @@ CREATE TABLE Staff (
   PRIMARY KEY (StaffID)
 );
 
+DROP TABLE IF EXISTS Admin CASCADE;
+
+/*Creating admins table*/
+CREATE TABLE Admin (
+  AdminID INTEGER NOT NULL UNIQUE,
+  AdminFirstName VARCHAR(25) NOT NULL,
+  AdminLastName VARCHAR(35) NOT NULL,
+  PRIMARY KEY (AdminID)
+);
 DROP TABLE IF EXISTS Courses CASCADE;
 
 /*Creating Courses table */
@@ -102,10 +111,10 @@ CREATE TABLE ItemsAndRequests (
   FOREIGN KEY(StudentID) REFERENCES Students(StudentID)
 );
 
-DROP TABLE IF EXISTS DepartmentsWithStudentsCoursesAndTutors CASCADE;
+DROP TABLE IF EXISTS DepartmentsStaffCoursesStudents CASCADE;
 
-/*Creating departs with students, courses and tutors table */
-CREATE TABLE DepartmentsWithStudentsCoursesAndTutors (
+/*Creating a table that links departments, staff, courses and students together*/
+CREATE TABLE DepartmentsStaffCoursesStudents (
   DepartmentID VARCHAR(255) NOT NULL, 
   StaffID INTEGER NOT NULL, 
   StudentID INTEGER NOT NULL, 
@@ -117,3 +126,74 @@ CREATE TABLE DepartmentsWithStudentsCoursesAndTutors (
   FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
   FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
 );
+
+DROP TABLE IF EXISTS studentUserDetails CASCADE;
+
+/*Student user details table for login*/
+CREATE TABLE StudentUserDetails (
+  StudentID INTEGER NOT NULL,
+  StudentUserPassword VARCHAR(255) NOT NULL,
+  StudentUserType VARCHAR(30) NOT NULL,
+  StudentUserActive TINYINT(1) NOT NULL DEFAULT 0,
+  StudentUserLastLoginDate DATE DEFAULT NULL,
+  PRIMARY KEY(StudentID),
+  FOREIGN KEY (StudentID) REFERENCES Students(StudentID)
+);
+
+DROP TABLE IF EXISTS staffUserDetails CASCADE;
+
+/*Staff user details table for login*/
+CREATE TABLE StaffUserDetails (
+  StaffID INTEGER NOT NULL,
+  StaffUserPassword VARCHAR(255) NOT NULL,
+  StaffUserType VARCHAR(30) NOT NULL,
+  StaffUserActive TINYINT(1) NOT NULL DEFAULT 0,
+  StaffUserLastLoginDate DATE DEFAULT NULL,
+  PRIMARY KEY(StaffID),
+  FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+);
+
+DROP TABLE IF EXISTS AdminUserDetails CASCADE;
+
+/*Admin user details table for login*/
+CREATE TABLE AdminUserDetails (
+  AdminID INTEGER NOT NULL,
+  AdminUserPassword VARCHAR(255) NOT NULL,
+  AdminUserType VARCHAR(30) NOT NULL,
+  AdminUserActive TINYINT(1) NOT NULL DEFAULT 0,
+  AdminUserLastLoginDate DATE DEFAULT NULL,
+  PRIMARY KEY(AdminID),
+  FOREIGN KEY (AdminID) REFERENCES Admin(AdminID)
+);
+
+#
+# drop the DB WEB admin control user
+#
+DROP USER 'WEBAuth';
+/* create test DB WEB admin*/
+CREATE USER 'WEBAuth' IDENTIFIED BY 'WEBAuthPW';
+
+/*give web admin SELECT and INSERT*/
+GRANT INSERT, SELECT, UPDATE ON StudentUserDetails TO 'WEBAuth';
+GRANT INSERT, SELECT, UPDATE ON StaffUserDetails TO 'WEBAuth';
+GRANT INSERT, SELECT, UPDATE ON AdminUserDetails TO 'WEBAuth';
+
+GRANT SELECT, UPDATE ON Students TO 'WEBAuth';
+GRANT SELECT, UPDATE ON Staff TO 'WEBAuth';
+GRANT SELECT, UPDATE ON Admin TO 'WEBAuth';
+
+
+/*
+Adding users to the DB
+all testUser Accounts have their password set to:- PasswordA
+which is then encrypted using md5, which is what is inserted into the database.*/
+
+/*Populating student, staff and admin tables*/
+INSERT INTO Students(StudentID,StudentFirstName,StudentLastName,DOB,GENDER,AvailableBalance) VALUES(293779,"Nikita","Skripnikov","07-11-1997",TRUE,500.00);
+INSERT INTO Staff(StaffID,StaffFirstName,StaffLastName) VALUES(52354,"John","Rogers");
+INSERT INTO Admin(AdminID,AdminFirstName,AdminLastName) VALUES(4561,"Stephen","Smith");
+
+/*Populating student staff and admin user details for login testing*/
+INSERT INTO StudentUserDetails(StudentID,StudentUserPassword,StudentUserType, StudentUserActive) VALUES(293779,"cf622eb3d4a59567353c2a13cd702514","Student", '1');
+INSERT INTO StaffUserDetails(StaffID,StaffUserPassword,StaffUserType, StaffUserActive) VALUES(52354,"cf622eb3d4a59567353c2a13cd702514","Staff", '1');
+INSERT INTO AdminUserDetails(AdminID,AdminUserPassword,AdminUserType, AdminUserActive) VALUES(4561,"cf622eb3d4a59567353c2a13cd702514","Admin", '1');
