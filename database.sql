@@ -1,103 +1,128 @@
-DROP DATABASE IF EXISTS BursaryDatabase;
-CREATE DATABASE BursaryDatabase; /*Creating the database*/
-USE BursaryDatabase;
+DROP DATABASE IF EXISTS bursary_database;
+CREATE DATABASE bursary_database; /*Creating the database*/
+USE bursary_database;
 
-
-DROP TABLE IF EXISTS Students CASCADE;
-
-/*Creating students table*/
-CREATE TABLE Students (
-  StudentID INTEGER NOT NULL UNIQUE, 
-  StudentFirstName VARCHAR(15) NOT NULL, 
-  StudentLastName VARCHAR(25) NOT NULL, 
-  DOB DATE NOT NULL,
-  GENDER BOOLEAN NOT NULL, 
-  AvailableBalance DECIMAL(5,2) NOT NULL, 
-  PRIMARY KEY (StudentID)
+# userType can be only be one of the following (staff, student, admin).
+# Creating user table that holds user information.*/
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE users (
+    userID INTEGER NOT NULL UNIQUE,
+    userFirstName VARCHAR(15) NOT NULL,
+    userLastName VARCHAR(25) NOT NULL,
+    userPassword VARCHAR(255) DEFAULT NULL,
+    userEmail VARCHAR(255) NOT NULL,
+    userType ENUM('Staff', 'Student', 'Admin') NOT NULL,
+    userActive TINYINT(1) NOT NULL DEFAULT 0,
+    userLastLoginDate DATE DEFAULT NULL,
+    PRIMARY KEY(userID)
 );
 
-DROP TABLE IF EXISTS Staff CASCADE;
-
-/*Creating tutors table */
-CREATE TABLE Staff (
-  StaffID INTEGER NOT NULL UNIQUE, 
-  StaffFirstName VARCHAR(15) NOT NULL, 
-  StaffLastName VARCHAR(25) NOT NULL, 
-  PRIMARY KEY (StaffID)
+# Creating students table*/
+DROP TABLE IF EXISTS student CASCADE;
+CREATE TABLE student (
+  studentID INTEGER NOT NULL UNIQUE, 
+  dOB DATE NOT NULL,
+  gender BOOLEAN NOT NULL, 
+  availableBalance DECIMAL(5,2) NOT NULL, 
+  PRIMARY KEY (studentID),
+  FOREIGN KEY (studentID) REFERENCES users(userID) /*Linking to user CHILD TABLE OF USER*/
 );
 
-DROP TABLE IF EXISTS Admin CASCADE;
-
-/*Creating admins table*/
-CREATE TABLE Admin (
-  AdminID INTEGER NOT NULL UNIQUE,
-  AdminFirstName VARCHAR(25) NOT NULL,
-  AdminLastName VARCHAR(35) NOT NULL,
-  PRIMARY KEY (AdminID)
+# Creating tutors table */
+DROP TABLE IF EXISTS staff CASCADE;
+CREATE TABLE staff (
+  staffID INTEGER NOT NULL UNIQUE, 
+  PRIMARY KEY (staffID),
+  FOREIGN KEY (staffID) REFERENCES users(userID) /*Linking to user CHILD TABLE OF USER*/
 );
-DROP TABLE IF EXISTS Courses CASCADE;
 
-/*Creating Courses table */
-CREATE TABLE Courses (
-  CourseID VARCHAR(255) NOT NULL UNIQUE, 
-  CourseTitle VARCHAR(35) NOT NULL, 
-  Subject VARCHAR(25) NOT NULL, 
-  FullTime BOOLEAN DEFAULT NULL, 
-  PartTime BOOLEAN DEFAULT NULL,
-  StartDate DATE NOT NULL,
-  EndDate DATE NOT NULL,
-  PRIMARY KEY (CourseID)
+# Creating admins table*/
+DROP TABLE IF EXISTS admin CASCADE;
+CREATE TABLE admin (
+  adminID INTEGER NOT NULL UNIQUE,
+  PRIMARY KEY (adminID),
+  FOREIGN KEY(adminID) REFERENCES users(userID) /*Linking to user CHILD TABLE OF USER*/
+);
+
+# Creating Courses table */
+DROP TABLE IF EXISTS course CASCADE;
+CREATE TABLE course (
+  courseID VARCHAR(255) NOT NULL UNIQUE, 
+  courseTitle VARCHAR(35) NOT NULL, 
+  courseSubject VARCHAR(25) NOT NULL,
+  courseType ENUM('Full_Time', 'Part_Time') NOT NULL,
+  #fullTime BOOLEAN DEFAULT NULL, 
+  #partTime BOOLEAN DEFAULT NULL,
+  courseStartDate DATE NOT NULL,
+  courseEndDate DATE NOT NULL,
+  PRIMARY KEY (courseID)
 ); 
 
-DROP TABLE IF EXISTS Departments CASCADE;
-
-/*Creating departments table */
-CREATE TABLE Departments (
-  DepartmentID VARCHAR(255) NOT NULL UNIQUE, 
-  DepartmentName VARCHAR(35) NOT NULL, 
-  CampusName VARCHAR(30) NOT NULL, 
-  PRIMARY KEY (DepartmentID)
+# Creating a table which links student to course.*/
+DROP TABLE IF EXISTS studentToCourse CASCADE;
+CREATE TABLE studentToCourse (
+  stcCourseID VARCHAR(255) NOT NULL, 
+  stcStudentID INTEGER NOT NULL, 
+  PRIMARY KEY (stcCourseID, stcStudentID),
+  FOREIGN KEY (stcStudentID) REFERENCES student(studentID),
+  FOREIGN KEY (stcCourseID) REFERENCES course(courseID)
 );
 
-DROP TABLE IF EXISTS BursaryRequests CASCADE;
-
-/*Creating bursary requests table */
-CREATE TABLE BursaryRequests (
-  RequestID INTEGER NOT NULL AUTO_INCREMENT, 
-  CourseID VARCHAR(255) NOT NULL, 
-  StaffID INTEGER NOT NULL, 
-  Justification VARCHAR(200) NOT NULL, 
-  TutorComments VARCHAR(200), 
-  AdminComments VARCHAR(200), 
-  StaffApproved VARCHAR(3) DEFAULT NULL, 
-  AdminApproved VARCHAR(3) DEFAULT NULL,
-  RequestDate DATE NOT NULL, 
-  Draft BOOLEAN DEFAULT NULL, 
-  StudentRequest BOOLEAN DEFAULT NULL,
-  StaffRequest BOOLEAN DEFAULT NULL, 
-  PRIMARY KEY (RequestID),
-  FOREIGN KEY (CourseID) REFERENCES Courses(CourseID),
-  FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
+# Creating departments table
+DROP TABLE IF EXISTS department CASCADE;
+CREATE TABLE department (
+  departmentID VARCHAR(255) NOT NULL UNIQUE, 
+  departmentName VARCHAR(35) NOT NULL, 
+  departmentCampusName ENUM('Lincoln', 'Gainsborough', 'Newark', 'Air_&_defence', 'Arabic', 'Construction') NOT NULL, 
+  PRIMARY KEY (departmentID)
 );
 
-DROP TABLE IF EXISTS BursaryRequestItems CASCADE;
-
-/*Creating bursary request items table */
-CREATE TABLE BursaryRequestItems (
-  ItemID INTEGER NOT NULL AUTO_INCREMENT, 
-  Category VARCHAR(30) NOT NULL, 
-  ItemDesc VARCHAR(100) NOT NULL,
-  ItemURL VARCHAR(200) NOT NULL, 
-  Price DECIMAL(5,2) NOT NULL,
-  Postage DECIMAL(5,2) DEFAULT NULL,
-  AdditionalCharges DECIMAL(5,2) DEFAULT NULL,   
-  PRIMARY KEY (ItemID)
+# Creating a table that links Staff to department
+DROP TABLE IF EXISTS staffToDepartment CASCADE;
+CREATE TABLE staffToDepartment (
+  stDepartmentID VARCHAR(255) NOT NULL, 
+  stStaffID INTEGER NOT NULL, 
+  PRIMARY KEY (stDepartmentID, stStaffID),
+  FOREIGN KEY (stDepartmentID) REFERENCES department(departmentID),
+  FOREIGN KEY (stStaffID) REFERENCES staff(staffID)
 );
 
-DROP TABLE IF EXISTS ItemsAndRequests CASCADE;
+# Creating bursary requests table */
+DROP TABLE IF EXISTS bursaryRequests CASCADE;
+CREATE TABLE bursaryRequests (
+  bRequestsID INTEGER NOT NULL AUTO_INCREMENT, 
+  bRequestsCourseID VARCHAR(255) NOT NULL, 
+  bRequestsStaffID INTEGER NOT NULL, 
+  bRequestsJustification VARCHAR(200) NOT NULL, 
+  bRequestsTutorComments VARCHAR(200), 
+  bRequestsAdminComments VARCHAR(200), 
+  bRequestsStaffApproved VARCHAR(3) DEFAULT NULL, 
+  bRequestsAdminApproved VARCHAR(3) DEFAULT NULL,
+  bRequestsRequestDate DATE NOT NULL, 
+  bRequestsDraft BOOLEAN DEFAULT NULL, 
+  bRequestsStudentRequest BOOLEAN DEFAULT NULL,
+  bRequestsStaffRequest BOOLEAN DEFAULT NULL, 
+  PRIMARY KEY (bRequestsID),
+  FOREIGN KEY (bRequestsCourseID) REFERENCES course(courseID),
+  FOREIGN KEY (bRequestsStaffID) REFERENCES staff(staffID)
+);
 
-/*Creating items with requests table table*/
-CREATE TABLE ItemsAndRequests (
+# Creating bursary request items table */
+DROP TABLE IF EXISTS bursaryRequestItems CASCADE;
+CREATE TABLE bursaryRequestItems (
+  brItemID INTEGER NOT NULL AUTO_INCREMENT, 
+  brItemCategory VARCHAR(30) NOT NULL, 
+  brItemDesc VARCHAR(100) NOT NULL,
+  brItemURL VARCHAR(200) NOT NULL, 
+  brItemPrice DECIMAL(5,2) NOT NULL,
+  brItemPostage DECIMAL(5,2) DEFAULT NULL,
+  brItemAdditionalCharges DECIMAL(5,2) DEFAULT NULL,   
+  PRIMARY KEY (brItemID)
+);
+
+# Creating items with requests table table*/
+DROP TABLE IF EXISTS itemsAndRequests CASCADE;
+CREATE TABLE itemsAndRequests (
   ItemID INTEGER NOT NULL, 
   RequestID INTEGER NOT NULL, 
   StudentID INTEGER NOT NULL, 
@@ -106,64 +131,24 @@ CREATE TABLE ItemsAndRequests (
   Ordered BOOLEAN DEFAULT NULL,
   Delivered BOOLEAN DEFAULT NULL, 
   PRIMARY KEY(ItemID, RequestID, StudentID),
-  FOREIGN KEY(ItemID) REFERENCES BursaryRequestItems(ItemID),
-  FOREIGN KEY(RequestID) REFERENCES BursaryRequests(RequestID),
-  FOREIGN KEY(StudentID) REFERENCES Students(StudentID)
+  FOREIGN KEY(ItemID) REFERENCES bursaryRequestItems(brItemID),
+  FOREIGN KEY(RequestID) REFERENCES bursaryRequests(bRequestsID),
+  FOREIGN KEY(StudentID) REFERENCES student(studentID)
 );
 
-DROP TABLE IF EXISTS DepartmentsStaffCoursesStudents CASCADE;
-
-/*Creating a table that links departments, staff, courses and students together*/
-CREATE TABLE DepartmentsStaffCoursesStudents (
-  DepartmentID VARCHAR(255) NOT NULL, 
-  StaffID INTEGER NOT NULL, 
-  StudentID INTEGER NOT NULL, 
-  CourseID VARCHAR(255) NOT NULL,
-  StudentStatus VARCHAR(20) NOT NULL,
-  PRIMARY KEY (DepartmentID, StaffID, StudentID, CourseID),
-  FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID),
-  FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
-  FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
-  FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
-);
-
-DROP TABLE IF EXISTS studentUserDetails CASCADE;
-
-/*Student user details table for login*/
-CREATE TABLE StudentUserDetails (
-  StudentID INTEGER NOT NULL,
-  StudentUserPassword VARCHAR(255) NOT NULL,
-  StudentUserType VARCHAR(30) NOT NULL,
-  StudentUserActive TINYINT(1) NOT NULL DEFAULT 0,
-  StudentUserLastLoginDate DATE DEFAULT NULL,
-  PRIMARY KEY(StudentID),
-  FOREIGN KEY (StudentID) REFERENCES Students(StudentID)
-);
-
-DROP TABLE IF EXISTS staffUserDetails CASCADE;
-
-/*Staff user details table for login*/
-CREATE TABLE StaffUserDetails (
-  StaffID INTEGER NOT NULL,
-  StaffUserPassword VARCHAR(255) NOT NULL,
-  StaffUserType VARCHAR(30) NOT NULL,
-  StaffUserActive TINYINT(1) NOT NULL DEFAULT 0,
-  StaffUserLastLoginDate DATE DEFAULT NULL,
-  PRIMARY KEY(StaffID),
-  FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
-);
-
-DROP TABLE IF EXISTS AdminUserDetails CASCADE;
-
-/*Admin user details table for login*/
-CREATE TABLE AdminUserDetails (
-  AdminID INTEGER NOT NULL,
-  AdminUserPassword VARCHAR(255) NOT NULL,
-  AdminUserType VARCHAR(30) NOT NULL,
-  AdminUserActive TINYINT(1) NOT NULL DEFAULT 0,
-  AdminUserLastLoginDate DATE DEFAULT NULL,
-  PRIMARY KEY(AdminID),
-  FOREIGN KEY (AdminID) REFERENCES Admin(AdminID)
+# Creating a table that links departments, staff, courses and students together*/
+DROP TABLE IF EXISTS departmentsStaffCourseStudents CASCADE;
+CREATE TABLE departmentsStaffCourseStudents (
+  bscsDepartmentID VARCHAR(255) NOT NULL, 
+  bscsStaffID INTEGER NOT NULL, 
+  bscsStudentID INTEGER NOT NULL, 
+  bscsCourseID VARCHAR(255) NOT NULL,
+  bscsStudentStatus VARCHAR(20) NOT NULL,
+  PRIMARY KEY (bscsDepartmentID, bscsStaffID, bscsStudentID, bscsCourseID),
+  FOREIGN KEY (bscsDepartmentID) REFERENCES department(departmentID),
+  FOREIGN KEY (bscsStaffID) REFERENCES staff(staffID),
+  FOREIGN KEY (bscsStudentID) REFERENCES student(studentID),
+  FOREIGN KEY (bscsCourseID) REFERENCES course(courseID)
 );
 
 #
@@ -174,13 +159,7 @@ DROP USER 'WEBAuth';
 CREATE USER 'WEBAuth' IDENTIFIED BY 'WEBAuthPW';
 
 /*give web admin SELECT and INSERT*/
-GRANT INSERT, SELECT, UPDATE ON StudentUserDetails TO 'WEBAuth';
-GRANT INSERT, SELECT, UPDATE ON StaffUserDetails TO 'WEBAuth';
-GRANT INSERT, SELECT, UPDATE ON AdminUserDetails TO 'WEBAuth';
-
-GRANT SELECT, UPDATE ON Students TO 'WEBAuth';
-GRANT SELECT, UPDATE ON Staff TO 'WEBAuth';
-GRANT SELECT, UPDATE ON Admin TO 'WEBAuth';
+GRANT INSERT, SELECT, UPDATE ON users TO 'WEBAuth';
 
 
 /*
@@ -188,12 +167,12 @@ Adding users to the DB
 all testUser Accounts have their password set to:- PasswordA
 which is then encrypted using md5, which is what is inserted into the database.*/
 
-/*Populating student, staff and admin tables*/
-INSERT INTO Students(StudentID,StudentFirstName,StudentLastName,DOB,GENDER,AvailableBalance) VALUES(293779,"Nikita","Skripnikov","07-11-1997",TRUE,500.00);
-INSERT INTO Staff(StaffID,StaffFirstName,StaffLastName) VALUES(52354,"John","Rogers");
-INSERT INTO Admin(AdminID,AdminFirstName,AdminLastName) VALUES(4561,"Stephen","Smith");
+/*NEED TO LINK STAFF TO DEPARTMENTS AND STUDENTS TO COURSES*/
+/*STUDENT CAN BE ON A DIFFERENT GROUP ON THE SAME SPECIFIC COURSE*/
 
-/*Populating student staff and admin user details for login testing*/
-INSERT INTO StudentUserDetails(StudentID,StudentUserPassword,StudentUserType, StudentUserActive) VALUES(293779,"cf622eb3d4a59567353c2a13cd702514","Student", '1');
-INSERT INTO StaffUserDetails(StaffID,StaffUserPassword,StaffUserType, StaffUserActive) VALUES(52354,"cf622eb3d4a59567353c2a13cd702514","Staff", '1');
-INSERT INTO AdminUserDetails(AdminID,AdminUserPassword,AdminUserType, AdminUserActive) VALUES(4561,"cf622eb3d4a59567353c2a13cd702514","Admin", '1');
+INSERT INTO users (userID, userFirstName, userLastName, userPasword, userEmail, userType, userActive)
+  VALUES (293779, "Nikita", "Skripnikov", "cf622eb3d4a59567353c2a13cd702514", '293779@student.lincolncollege.ac.uk', "Student", '1');
+INSERT INTO users (userID, userFirstName, userLastName, userPasword, userEmail, userType, userActive)
+  VALUES (52354,"John","Rogers", "cf622eb3d4a59567353c2a13cd702514", 'JRogers@lincolncollege.ac.uk', "Staff", '1');
+INSERT INTO users (userID, userFirstName, userLastName, userPasword, userEmail, userType, userActive)
+  VALUES (4561,"Stephen","Smith", "cf622eb3d4a59567353c2a13cd702514", 'SSmith@lincolncollege.ac.uk', "Admin", '1');
