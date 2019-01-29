@@ -170,9 +170,9 @@ which is then encrypted using md5, which is what is inserted into the database.*
 /*NEED TO LINK STAFF TO DEPARTMENTS AND STUDENTS TO COURSES*/
 /*STUDENT CAN BE ON A DIFFERENT GROUP ON THE SAME SPECIFIC COURSE*/
 
-INSERT INTO users (userID, userFirstName, userLastName, userPasword, userEmail, userType, userActive)
+INSERT INTO users (userID, userFirstName, userLastName, userPassword, userEmail, userType, userActive)
   VALUES (293779, "Nikita", "Skripnikov", "cf622eb3d4a59567353c2a13cd702514", '293779@student.lincolncollege.ac.uk', "Student", '1');
-INSERT INTO users (userID, userFirstName, userLastName, userPasword, userEmail, userType, userActive)
+INSERT INTO users (userID, userFirstName, userLastName, userPassword, userEmail, userType, userActive)
   VALUES (52354,"John","Rogers", "cf622eb3d4a59567353c2a13cd702514", 'JRogers@lincolncollege.ac.uk', "Staff", '1');
-INSERT INTO users (userID, userFirstName, userLastName, userPasword, userEmail, userType, userActive)
+INSERT INTO users (userID, userFirstName, userLastName, userPassword, userEmail, userType, userActive)
   VALUES (4561,"Stephen","Smith", "cf622eb3d4a59567353c2a13cd702514", 'SSmith@lincolncollege.ac.uk', "Admin", '1');
