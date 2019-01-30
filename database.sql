@@ -63,6 +63,7 @@ DROP TABLE IF EXISTS studentToCourse CASCADE;
 CREATE TABLE studentToCourse (
   stcCourseID VARCHAR(255) NOT NULL, 
   stcStudentID INTEGER NOT NULL, 
+  stcStudentStatus VARCHAR(30) NOT NULL,
   PRIMARY KEY (stcCourseID, stcStudentID),
   FOREIGN KEY (stcStudentID) REFERENCES student(studentID),
   FOREIGN KEY (stcCourseID) REFERENCES course(courseID)
@@ -143,7 +144,6 @@ CREATE TABLE departmentsStaffCourseStudents (
   bscsStaffID INTEGER NOT NULL, 
   bscsStudentID INTEGER NOT NULL, 
   bscsCourseID VARCHAR(255) NOT NULL,
-  bscsStudentStatus VARCHAR(20) NOT NULL,
   PRIMARY KEY (bscsDepartmentID, bscsStaffID, bscsStudentID, bscsCourseID),
   FOREIGN KEY (bscsDepartmentID) REFERENCES department(departmentID),
   FOREIGN KEY (bscsStaffID) REFERENCES staff(staffID),
