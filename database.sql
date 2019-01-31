@@ -4,6 +4,7 @@ USE bursary_database;
 
 # userType can be only be one of the following (staff, student, admin).
 # Creating user table that holds user information.*/
+
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
     userID INTEGER NOT NULL UNIQUE,
@@ -14,6 +15,7 @@ CREATE TABLE users (
     userType ENUM('Staff', 'Student', 'Admin') NOT NULL,
     userActive TINYINT(1) NOT NULL DEFAULT 0,
     userLastLoginDate DATE DEFAULT NULL,
+    userAgreementGDPR TINYINT(1) DEFAULT 0,
     PRIMARY KEY(userID)
 );
 
@@ -150,29 +152,3 @@ CREATE TABLE departmentsStaffCourseStudents (
   FOREIGN KEY (bscsStudentID) REFERENCES student(studentID),
   FOREIGN KEY (bscsCourseID) REFERENCES course(courseID)
 );
-
-#
-# drop the DB WEB admin control user
-#
-DROP USER 'WEBAuth';
-/* create test DB WEB admin*/
-CREATE USER 'WEBAuth' IDENTIFIED BY 'WEBAuthPW';
-
-/*give web admin SELECT and INSERT*/
-GRANT INSERT, SELECT, UPDATE ON users TO 'WEBAuth';
-
-
-/*
-Adding users to the DB
-all testUser Accounts have their password set to:- PasswordA
-which is then encrypted using md5, which is what is inserted into the database.*/
-
-/*NEED TO LINK STAFF TO DEPARTMENTS AND STUDENTS TO COURSES*/
-/*STUDENT CAN BE ON A DIFFERENT GROUP ON THE SAME SPECIFIC COURSE*/
-
-INSERT INTO users (userID, userFirstName, userLastName, userPassword, userEmail, userType, userActive)
-  VALUES (293779, "Nikita", "Skripnikov", "cf622eb3d4a59567353c2a13cd702514", '293779@student.lincolncollege.ac.uk', "Student", '1');
-INSERT INTO users (userID, userFirstName, userLastName, userPassword, userEmail, userType, userActive)
-  VALUES (52354,"John","Rogers", "cf622eb3d4a59567353c2a13cd702514", 'JRogers@lincolncollege.ac.uk', "Staff", '1');
-INSERT INTO users (userID, userFirstName, userLastName, userPassword, userEmail, userType, userActive)
-  VALUES (4561,"Stephen","Smith", "cf622eb3d4a59567353c2a13cd702514", 'SSmith@lincolncollege.ac.uk', "Admin", '1');
