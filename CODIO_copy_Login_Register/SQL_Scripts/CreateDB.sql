@@ -1,10 +1,11 @@
-## file name    : PopulateDB.sql
+## file name    : CreateDB.sql
 ## Created by   : Nick Skripnikov
 ## Date created : 31/01/2019
 ## Purpose      :- 
 ## Notes        :-
-## last opdated : 01/02/2019
-
+## last updated : 01/02/2019 by: Nick Skripnikov
+## last updated : 07/02/2019 by: Mike Wright
+## Change Log   :- Added course level into the ‘course’ table.
 
 DROP DATABASE IF EXISTS bursary_database;
 CREATE DATABASE bursary_database; /*Creating the database*/
@@ -12,7 +13,6 @@ USE bursary_database;
 
 # userType can be only be one of the following (staff, student, admin).
 # Creating user table that holds user information.*/
-
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
     userID INTEGER NOT NULL UNIQUE,
@@ -61,6 +61,7 @@ CREATE TABLE course (
   courseTitle VARCHAR(35) NOT NULL, 
   courseSubject VARCHAR(25) NOT NULL,
   courseType ENUM('Full_Time', 'Part_Time') NOT NULL,
+  courseLevel ENUM('4', '5','6') NOT NULL,
   #fullTime BOOLEAN DEFAULT NULL, 
   #partTime BOOLEAN DEFAULT NULL,
   courseStartDate DATE NOT NULL,

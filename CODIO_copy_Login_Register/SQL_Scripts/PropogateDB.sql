@@ -1,17 +1,19 @@
 ## file name    : PopulateDB.sql
 ## Created by   : Nick Skripnikov
 ## Date created : 04/01/2019
-## Purpose      :- populate Busary System (bursary_database) database with sample test data
+## Purpose      :- populate Bursary System (bursary_database) database with sample test data
 ## Notes        :-
-## last opdated : 03/02/2019
-## Updated by   : Nick Skripnikov & Mike Wright
-## chamge made  :
-##               - Added users (students, lecturers, admins) from diffent courses.
+## last updated : 03/02/2019 by: Nick Skripnikov & Mike Wright
+## last updated : 07/02/2019 by: Mike Wright
+## change made  :
+##               - Added users (students, lecturers, admins) from different courses.
 ##               - added associated course data for new users.
 ##               - added some order data.
 ##               - added USE, so as data is added to the correct database.
 ##               - remarked-in some md5 encrypted passwords.
 ##               - removed pre-set user passwords.
+##               - update query/table insert with ‘courseLevel’ data (used guess ‘courseID’ to ‘courseLevel)’.
+
 
 # connect to the Busary Request Database to be abble to add data
 USE bursary_database;
@@ -86,14 +88,32 @@ INSERT INTO staff(staffID) VALUES (53270);
 INSERT INTO admin(adminID) VALUES (4561);
 
 #-------Course table insertion------------#
-INSERT INTO course(courseID,courseTitle,courseSubject,courseType,courseStartDate,courseEndDate)
-VALUES ("HEBCSIT111","BCs Computer Science", "Information Technology","Full_Time","2018-09-05","2019-06-30");
-INSERT INTO course(courseID,courseTitle,courseSubject,courseType,courseStartDate,courseEndDate)
-VALUES ("HEBCSIT112","BCs Computer Science", "Information Technology","Part_Time","2018-09-05","2022-06-30");
-INSERT INTO course(courseID,courseTitle,courseSubject,courseType,courseStartDate,courseEndDate)
-VALUES ("HEMNG001","BCs Mechanical Engineering", "Mechanical Engineering","Full_Time","2018-09-05","2019-06-30");
-INSERT INTO course(courseID,courseTitle,courseSubject,courseType,courseStartDate,courseEndDate)
-VALUES ("HEHAIR001","BCs Hair and beauty", "Hair and beauty","Full_Time","2018-09-05","2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEBCSIT111", "BCs Computer Science", "Information Technology", "Full_Time",'4', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEBCSIT112", "BCs Computer Science", "Information Technology", "Part_Time", '4', "2018-09-05", "2022-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEMNG001", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '4', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEHAIR001", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '4', "2018-09-05", "2019-06-30");
+# - courseID is a gues here, based on new level
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEBCSIT121", "BCs Computer Science", "Information Technology", "Full_Time",'5', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEBCSIT122", "BCs Computer Science", "Information Technology", "Part_Time", '5', "2018-09-05", "2022-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEMNG011", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '5', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEHAIR011", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '5', "2018-09-05", "2019-06-30");
+# - courseID is a gues here, based on new level
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEBCSIT131", "BCs Computer Science", "Information Technology", "Full_Time",'6', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEBCSIT132", "BCs Computer Science", "Information Technology", "Part_Time", '6', "2018-09-05", "2022-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEMNG021", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '6', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
+VALUES ("HEHAIR021", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '6', "2018-09-05", "2019-06-30");
 
 #-------Department table insertion------------#
 INSERT INTO department(departmentID,departmentName,departmentCampusName)
