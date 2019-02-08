@@ -1,3 +1,11 @@
+## file name    : nickQueries.sql
+## Created by   : Nikita Skripnikov
+## Date created : 08/02/2019
+## Purpose      :- Selective queries SQL queries for PHP system purposes
+## Notes        :-
+## last updated : 08/02/2019
+## change made  :- 
+
 /*Nicks queries*/
 
 /*Select student name of a specific student TEST*/
@@ -6,6 +14,15 @@ where userID = 293779;
 /*FOR PHP*/
 /*SELECT CONCAT(userFirstName, " ", userLastName) as 'Name' from users
 where userID = $UserID;*/
+
+/*Select course title of a specific student TEST*/
+SELECT courseTitle as 'Course' from course inner join studentToCourse
+on course.courseID = studentToCourse.stcCourseID inner join users 
+on users.userID = 293779 and studentToCourse.stcStudentID = 293779;
+/*FOR PHP*/
+/*SELECT courseTitle as 'Course' from course inner join studentToCourse
+on course.courseID = studentToCourse.stcCourseID inner join users 
+on users.userID = $UserID and studentToCourse.stcStudentID = $UserID;*/
 
 /*COUNT all bursary requests that are not approved (Submitted) NOT DRAFT as well TEST */
 SELECT COUNT(*) as 'Total' from bursaryRequests inner join itemsAndRequests
@@ -55,3 +72,5 @@ brItemAdditionalCharges as 'Additional charges' from bursaryRequestItems
 inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID 
 and itemsAndRequests.RequestID = $RequestID
 and itemsAndRequests.StudentID = $UserID;*/
+
+
