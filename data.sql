@@ -144,14 +144,14 @@ INSERT INTO staffToDepartment(stDepartmentID,stStaffID)
 VALUES ("SiemensLincCol1002",59021);
 
 #-------Bursary requests table insertion------------#
-INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStudentRequest)
-VALUES ("HEBCSIT111",52354,"Rasberry Pi for course work.","2019-01-01",TRUE); /*Student request for rasberry Pi for full time computer course*/
-INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStudentRequest)
-VALUES ("HEBCSIT112",52354,"Replacement of my broken keyboard","2019-01-01",TRUE); /*Student request for computer keyboard for part time computer course*/
-INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStaffRequest)
-VALUES ("HEMNG001",59021,"Spanner for each student.","2019-01-01",TRUE); /*Staff request for bulk order for mechanical engineering course for 2 people*/
-INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStudentRequest)
-VALUES ("HEHAIR001",53270,"Shampoo and hair brush for practicals.","2019-01-01",TRUE); /*Student reqeust for hair and beauty course 2 items*/
+INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
+VALUES ("HEBCSIT111",52354,"Rasberry Pi for course work.","2019-10-01","Submitted",TRUE); /*Student request for rasberry Pi for full time computer course*/
+INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
+VALUES ("HEBCSIT112",52354,"Replacement of my broken keyboard","2019-01-01","Submitted",TRUE); /*Student request for computer keyboard for part time computer course*/
+INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest)
+VALUES ("HEMNG001",59021,"Spanner for each student.","2019-01-01","Submitted",TRUE); /*Staff request for bulk order for mechanical engineering course for 2 people*/
+INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
+VALUES ("HEHAIR001",53270,"Shampoo and hair brush for practicals.","2019-01-01","Submitted",TRUE); /*Student reqeust for hair and beauty course 2 items*/
 
 #-------Bursary request items table insertion------------#
 /*Bursary funds can be spent on any of the following:
@@ -184,7 +184,7 @@ VALUES(4,4,25432);
 INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
 VALUES(5,4,25432);
 
-#-------Items and requests table insertion------------#
+#-------Departments,Staff,Course and Students table insertion------------#
 INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
 VALUES("CompLincCol1001",52354,29000,"HEBCSIT111");
 INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)

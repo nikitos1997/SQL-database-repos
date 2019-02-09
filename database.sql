@@ -62,8 +62,6 @@ CREATE TABLE course (
   courseSubject VARCHAR(25) NOT NULL,
   courseType ENUM('Full_Time', 'Part_Time') NOT NULL,
   courseLevel ENUM('4', '5','6') NOT NULL,
-  #fullTime BOOLEAN DEFAULT NULL, 
-  #partTime BOOLEAN DEFAULT NULL,
   courseStartDate DATE NOT NULL,
   courseEndDate DATE NOT NULL,
   PRIMARY KEY (courseID)
@@ -111,7 +109,7 @@ CREATE TABLE bursaryRequests (
   bRequestsStaffApproved VARCHAR(3) DEFAULT NULL, 
   bRequestsAdminApproved VARCHAR(3) DEFAULT NULL,
   bRequestsRequestDate DATE NOT NULL, 
-  bRequestsDraft BOOLEAN DEFAULT NULL, 
+  bRequestsStatus ENUM ('Approved','Submitted','Draft','Pending','Cancelled') DEFAULT NULL,
   bRequestsStudentRequest BOOLEAN DEFAULT NULL,
   bRequestsStaffRequest BOOLEAN DEFAULT NULL, 
   PRIMARY KEY (bRequestsID),
