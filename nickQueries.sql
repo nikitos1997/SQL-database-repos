@@ -7,8 +7,13 @@
 ## change made  :- Start of the queries
 ## last updated : 09/02/2019
 ## change made  :- Altered queries due to one of the tables being altered
+## last updated : 10/02/2019
+## change made  :- New queries added and tested
+
 
 /*Nicks queries*/
+
+/*-------------------------------------------------*/
 
 /*Select student name of a specific student TEST*/
 SELECT CONCAT(userFirstName, " ", userLastName) as 'Name' from users
@@ -16,6 +21,8 @@ where userID = 293779;
 /*FOR PHP*/
 /*SELECT CONCAT(userFirstName, " ", userLastName) as 'Name' from users
 where userID = $userid;*/
+
+/*-------------------------------------------------*/
 
 /*Select course title of a specific student TEST*/
 SELECT courseTitle as 'Course' from course inner join studentToCourse
@@ -25,6 +32,8 @@ on users.userID = 293779 and studentToCourse.stcStudentID = 293779;
 /*SELECT courseTitle as 'Course' from course inner join studentToCourse
 on course.courseID = studentToCourse.stcCourseID inner join users 
 on users.userID = $userID and studentToCourse.stcStudentID = $userid;*/
+
+/*-------------------------------------------------*/
 
 /*COUNT all bursary requests that are not approved (Submitted) NOT DRAFT as well TEST */
 SELECT COUNT(*) as 'Total' from bursaryRequests inner join itemsAndRequests
@@ -36,6 +45,8 @@ and bRequestsStatus = "Submitted";
 where itemsAndRequests.RequestID = bursaryRequests.bRequestsID and itemsAndRequests.StudentID = $userid
 and bursaryRequests.bRequestsStaffApproved is NULL and bursaryRequests.bRequestsAdminApproved is NULL 
 and bRequestsStatus = "Submitted";*/
+
+/*-------------------------------------------------*/
 
 /*OUTPUT specific bursary request linked to a specific student TEST */
 SELECT courseTitle, CONCAT(userFirstName, " ", userLastName) as 'Tutor',
@@ -62,6 +73,8 @@ inner join itemsAndRequests on itemsAndRequests.RequestID = $RequestID
 and bursaryRequests.bRequestsID = $requestid
 and itemsAndRequests.StudentID = $userid*/
 
+/*-------------------------------------------------*/
+
 /*OUTPUT all items linked to a specific bursary request of a specific student TEST */
 SELECT brItemCategory as 'Category', brItemDesc as 'Item description',
 brItemURL as 'URL', brItemPrice as 'Price', brItemPostage as 'Postage',
@@ -76,6 +89,8 @@ brItemAdditionalCharges as 'Additional charges' from bursaryRequestItems
 inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID 
 and itemsAndRequests.RequestID = $requestid
 and itemsAndRequests.StudentID = $userid;*/
+
+/*-------------------------------------------------*/
 
 /*Select all items of all requests that are a draft linked to a specific student*/
 /*UPDATE bursaryRequests SET bRequestsDraft = TRUE where bRequestsID =1;
@@ -97,6 +112,28 @@ and itemsAndRequests.StudentID = $userid
 inner join bursaryRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
 and bursaryRequests.bRequestsStatus = "Draft"
 ORDER BY bursaryRequests.bRequestsRequestDate DESC;*/
+
+/*-------------------------------------------------*/
+
+/*UPDATE specific draft request info that is linked to a specific student TEST */
+/*UPDATE bursaryRequests SET bRequestsJustification = "" where bRequestsID = 1; */
+/*FOR PHP*/
+/*UPDATE bursaryRequests SET bRequestsJustification = "" where bRequestsID = $requestid;*/
+
+/*-------------------------------------------------*/
+
+/*UPDATE specific item linked to a specific draft request of a specific student TEST*/
+/*UPDATE bursaryRequestItems SET brItemCategory = "",brItemDesc = "",brItemURL = "",brItemPrice = "", brItemPostage = "", 
+brItemAdditionalCharges = "" where brItemID = 1; FOR TEST*/
+/*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
+VALUES(1,1,293779);*/
+/*FOR PHP*/
+/*UPDATE bursaryRequestItems SET brItemCategory = "",brItemDesc = "",brItemURL = "",brItemPrice = "", brItemPostage = "", 
+brItemAdditionalCharges = "" where brItemID = $itemid;*/
+/*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
+VALUES($itemid,$requestid,$userid);*/
+
+/*-------------------------------------------------*/
 
 /*-	OUTPUT all bursary requests that are pending with the total price of all items and item count 
 (Linked to specific student and linked to the requests) TEST- */
@@ -122,14 +159,17 @@ itemsAndRequests.ItemID = bursaryRequestItems.brItemID and bursaryRequests.bRequ
 and bursaryRequests.bRequestsAdminApproved is NULL and bursaryRequests.bRequestsStatus = "Submitted"
 GROUP BY bursaryRequests.bRequestsID ORDER BY bursaryRequests.bRequestsRequestDate ASC;*/
 
-/*Cancel a specific request that is pending for approval (Specific request) TEST*/
+/*-------------------------------------------------*/
 
+/*Cancel a specific request that is pending for approval (Specific request) TEST*/
 /*UPDATE bursaryRequests SET bRequestsStatus = "Cancelled" where bRequestsID = 1 and bRequestsStatus = "Submitted"
 and bRequestsAdminApproved is NULL and bRequestsStaffApproved is NULL; FOR TESTING ONLY*/
 #SELECT bRequestsStatus from bursaryRequests; FOR PROOF THAT IT WORKS
 /*FOR PHP*/
 /*UPDATE bursaryRequests SET bRequestsStatus = "Cancelled" where bRequestsID = $requestid and bRequestsStatus = "Submitted"
 and bRequestsAdminApproved is NULL and bRequestsStaffApproved is NULL;*/
+
+/*-------------------------------------------------*/
 
 /*SELECT all requests from specific course, year, level and status linked to specific student*/
 SELECT itemsAndRequests.StudentID as "Student ID", bursaryRequests.bRequestsRequestDate as 'Date submitted',
@@ -153,12 +193,16 @@ and course.courseLevel = $courseLevel and course.courseStartDate = $courseStartD
 on bursaryRequestItems.brItemID = itemsAndRequests.ItemID and bursaryRequests.bRequestsStatus = $requestStatus
 GROUP BY itemsAndRequests.RequestID ORDER BY bursaryRequests.bRequestsRequestDate ASC;*/
 
+/*-------------------------------------------------*/
+
 /*SELECT all Courses linked to specific student (FOR SELECTING) TEST*/
 SELECT courseTitle from course inner join studentToCourse on course.courseID = studentToCourse.stcCourseID
 and studentToCourse.stcStudentID = 293779;
 /*FOR PHP*/
 /*SELECT courseTitle from course inner join studentToCourse where course.courseID = studentToCourse.stcCourseID
 and studentToCourse.stcStudentID = $userid;*/
+
+/*-------------------------------------------------*/
 
 /*-	SELECT all Years linked to specific student (FOR SELECTING) TEST*/
 SELECT courseStartDate as 'Start date' from course inner join studentToCourse
@@ -167,9 +211,62 @@ on course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentI
 /*SELECT courseStartDate as 'Start date' from course inner join studentToCourse
 where course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = $userid;*/
 
+/*-------------------------------------------------*/
+
 /*SELECT all levels linked to specific student (FOR SELECTING) TEST */
 SELECT courseLevel as 'Level' from course inner join studentToCourse
 on course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = 29000;
 /*FOR PHP*/
 /*SELECT courseLevel as 'Level' from course inner join studentToCourse
 on course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = $userid;*/
+
+/*-------------------------------------------------*/
+
+/*UPDATE users table for specific user to agree/disagree to GDPR TEST */
+/*UPDATE users SET userAgreementGDPR = 1 where userID = 293779;
+SELECT userAgreementGDPR from users where userID = 293779; FOR TESTING ONLY*/
+/*FOR PHP*/
+/*UPDATE users SET userAgreementGDPR = $agreementGDPR where userID = $userid*/
+
+/*-------------------------------------------------*/
+
+/*INSERT new bursary request with data for specific course and staff member (SUBMIT-Student) TEST */
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
+VALUES ("HEBCSIT111",52354,"Rasberry Pi for course work.","2019-10-01","Submitted",TRUE); *//*Student request for rasberry Pi for full time computer course*/
+/*FOR PHP*/
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
+VALUES ($courseid,$userid,$txbJustication,$dateNow,"Submitted",TRUE); Student request for rasberry Pi for full time computer course*/
+
+/*-------------------------------------------------*/
+
+/*INSERT items belonging to a specific bursary request and specific student (SUBMIT) TEST*/
+/*INSERT INTO bursaryRequestItems(brItemCategory,brItemDesc,brItemURL,brItemPrice,brItemPostage,brItemAdditionalCharges)
+VALUES("Equipment and resources","New computer keyboard","https://www.amazon.co.uk/dp/B00M75WPKO/ref=asc_df_B00M75WPKO58142109/?tag=googshopuk-21&creative=22146&creativeASIN=B00M75WPKO&linkCode=df0&hvadid=310665672682&hvpos=1o2&hvnetw=g&hvrand=3873864805278938592&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=1006876&hvtargid=pla-563720906553",9.99,NULL,NULL);*/
+/*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
+VALUES(1,1,29000);*/
+/*FOR PHP*/
+/*INSERT INTO bursaryRequestItems(brItemCategory,brItemDesc,brItemURL,brItemPrice,brItemPostage,brItemAdditionalCharges)
+VALUES($txbItemCategory,$txbItemDescription,,$txbPrice, $txbPostage, $txbAdditionalCharges);*/
+/*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
+VALUES($itemid,$requestid,$userid);*/
+
+/*-------------------------------------------------*/
+
+/*INSERT new bursary request with data for specific course and staff member AS DRAFT TEST */
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
+VALUES ("HEBCSIT111",52354,"Rasberry Pi for course work.","2019-10-01","Draft",TRUE);*/
+/*FOR PHP*/
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
+VALUES ($courseid,$userid,$txbJustication,$dateNow,$requestStatus,TRUE);*/
+
+/*SELECT Tutor name relating to specific student TEST*/
+SELECT CONCAT(userFirstName, " ", userLastName) as 'Tutor' from users
+inner join departmentsStaffCourseStudents on users.userID = departmentsStaffCourseStudents.bscsStaffID
+and departmentsStaffCourseStudents.bscsStudentID = 293779;
+/*FOR PHP*/
+/*SELECT CONCAT(userFirstName, " ", userLastName) as 'Tutor' from users
+inner join departmentsStaffCourseStudents on users.userID = departmentsStaffCourseStudents.bscsStaffID
+and departmentsStaffCourseStudents.bscsStudentID = $userid;*/
+
+/*-------------------------------------------------*/
+
