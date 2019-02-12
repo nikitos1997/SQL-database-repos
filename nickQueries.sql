@@ -9,6 +9,8 @@
 ## change made  :- Altered queries due to one of the tables being altered
 ## last updated : 10/02/2019
 ## change made  :- New queries added and tested
+## last updated : 12/02/2019
+## change made  :- New queries added and tested
 
 
 /*Nicks queries*/
@@ -161,6 +163,13 @@ GROUP BY bursaryRequests.bRequestsID ORDER BY bursaryRequests.bRequestsRequestDa
 
 /*-------------------------------------------------*/
 
+/*DELETE specific DRAFT linked to a specific Student TEST-Based on draft being deleted needs a draft added*/
+/*DELETE from bursaryRequests where bRequestsID =1 and bRequestsStatus = "Draft"; */
+/*FOR PHP*/
+/*DELETE from bursaryRequests where bRequestsID =$requestid and bRequestsStatus = "Draft";*/
+
+/*-------------------------------------------------*/
+
 /*Cancel a specific request that is pending for approval (Specific request) TEST*/
 /*UPDATE bursaryRequests SET bRequestsStatus = "Cancelled" where bRequestsID = 1 and bRequestsStatus = "Submitted"
 and bRequestsAdminApproved is NULL and bRequestsStaffApproved is NULL; FOR TESTING ONLY*/
@@ -172,9 +181,9 @@ and bRequestsAdminApproved is NULL and bRequestsStaffApproved is NULL;*/
 /*-------------------------------------------------*/
 
 /*SELECT all requests from specific course, year, level and status linked to specific student*/
-SELECT itemsAndRequests.StudentID as "Student ID", bursaryRequests.bRequestsRequestDate as 'Date submitted',
+SELECT itemsAndRequests.StudentID as "Student_ID", bursaryRequests.bRequestsRequestDate as 'Date_submitted',
 SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + IFNULL(bursaryRequestItems.brItemPostage,0) + 
-IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total price',
+IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price',
 bRequestsStatus as 'Status' from bursaryRequests inner join itemsAndRequests 
 on itemsAndRequests.RequestID = bursaryRequests.bRequestsID and itemsAndRequests.StudentID = 25432
 and bursaryRequests.bRequestsCourseID = "HEHAIR001" inner join course on course.courseTitle = "BCs Hair and beauty"
@@ -205,7 +214,7 @@ and studentToCourse.stcStudentID = $userid;*/
 /*-------------------------------------------------*/
 
 /*-	SELECT all Years linked to specific student (FOR SELECTING) TEST*/
-SELECT courseStartDate as 'Start date' from course inner join studentToCourse
+SELECT courseStartDate as 'Start_date' from course inner join studentToCourse
 on course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = 29000;
 /*FOR PHP*/
 /*SELECT courseStartDate as 'Start date' from course inner join studentToCourse
@@ -257,7 +266,9 @@ VALUES($itemid,$requestid,$userid);*/
 VALUES ("HEBCSIT111",52354,"Rasberry Pi for course work.","2019-10-01","Draft",TRUE);*/
 /*FOR PHP*/
 /*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStudentRequest)
-VALUES ($courseid,$userid,$txbJustication,$dateNow,$requestStatus,TRUE);*/
+VALUES ($courseid,$userid,$txbJustication,$dateNow,"Draft",TRUE);*/
+
+/*-------------------------------------------------*/
 
 /*SELECT Tutor name relating to specific student TEST*/
 SELECT CONCAT(userFirstName, " ", userLastName) as 'Tutor' from users
@@ -270,3 +281,50 @@ and departmentsStaffCourseStudents.bscsStudentID = $userid;*/
 
 /*-------------------------------------------------*/
 
+/*Delete an item from a specific request TEST */
+/*DELETE from bursaryRequestItems where brItemID = 1;*/
+/*FOR PHP*/
+/*DELETE from bursaryRequestItems where brItemID = $itemid;*/
+
+/*-------------------END OF STUDENT QUERIES----------------------------*/
+
+/*-------------------Staff Queries----------------------------*/
+
+/*SELECT all students belonging to a specific staff member and are on a specific course, level and year TEST */
+SELECT userID as "Student_ID", CONCAT(userFirstName, " ",userLastName) as "Student_name",
+student.availableBalance from users inner join student on users.userID = student.studentID
+inner join departmentsStaffCourseStudents on users.userID = departmentsStaffCourseStudents.bscsStudentID
+and departmentsStaffCourseStudents.bscsStaffID = 59021 
+inner join course on departmentsStaffCourseStudents.bscsCourseID = course.courseID and 
+course.courseTitle = "BCs Mechanical Engineering" and course.courseLevel = "4" and 
+course.courseStartDate = "2018-09-05" GROUP BY userID;
+/*FOR PHP*/
+/*SELECT userID as "Student_ID", CONCAT(userFirstName, " ",userLastName) as "Student_name",
+student.availableBalance from users inner join student on users.userID = student.studentID
+inner join departmentsStaffCourseStudents on users.userID = departmentsStaffCourseStudents.bscsStudentID
+and departmentsStaffCourseStudents.bscsStaffID = $userid 
+inner join course on departmentsStaffCourseStudents.bscsCourseID = course.courseID and 
+course.courseTitle = $txbCourseTitle and course.courseLevel = $txbCourseLevel and 
+course.courseStartDate = $txbCourseStartDate GROUP BY userID;*/
+
+/*-------------------------------------------------*/
+
+/*INSERT new staff bursary request info for a specific student and to a specific course TEST*/
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest,bRequestsStaffApproved)
+VALUES ("HEMNG001",59021,"Spanner for each student.","2019-01-01","Submitted",TRUE,"Yes");*/ /*Staff request for bulk order for mechanical engineering course for 2 people*/
+/*FOR PHP*/
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest,bRequestsStaffApproved)
+VALUES ($courseid,$userid,$txbJustication,$dateNow,"Submitted",TRUE,"Yes");*/
+
+/*-------------------------------------------------*/
+
+/*INSERT a specific item linked to a specific staff request for a specific student
+  INSERT a specific student belonging to that staff member to a staff bursary request 
+  (Ticking a student to a request) TEST TWO PRETTY MUCH SAME QUERIES*/
+/*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
+VALUES(1,6,25432);*/
+/*FOR PHP*/
+/*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
+VALUES($itemid,$requestid,$userid);*/
+
+/*-------------------------------------------------*/
