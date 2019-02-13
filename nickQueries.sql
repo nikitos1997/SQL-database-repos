@@ -11,6 +11,8 @@
 ## change made  :- New queries added and tested
 ## last updated : 12/02/2019
 ## change made  :- New queries added and tested
+## last updated : 13/02/2019
+## change made  :- New queries added, tested and updated due to database course table change
 
 
 /*Nicks queries*/
@@ -187,19 +189,19 @@ IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price',
 bRequestsStatus as 'Status' from bursaryRequests inner join itemsAndRequests 
 on itemsAndRequests.RequestID = bursaryRequests.bRequestsID and itemsAndRequests.StudentID = 25432
 and bursaryRequests.bRequestsCourseID = "HEHAIR001" inner join course on course.courseTitle = "BCs Hair and beauty"
-and course.courseLevel = "4" and course.courseStartDate = "2018-09-05" inner join bursaryRequestItems 
+and course.courseLevel = "4" and course.courseYear = "2018/2019" inner join bursaryRequestItems 
 on bursaryRequestItems.brItemID = itemsAndRequests.ItemID and bursaryRequests.bRequestsStatus = "Submitted" 
 GROUP BY itemsAndRequests.RequestID ORDER BY bursaryRequests.bRequestsRequestDate ASC; 
 /*Tested with by adding this student to another request*/
 /*FOR PHP*/
-/*SELECT itemsAndRequests.StudentID as "Student ID", bursaryRequests.bRequestsRequestDate as 'Date submitted',
+/*SELECT itemsAndRequests.StudentID as "Student_ID", bursaryRequests.bRequestsRequestDate as 'Date_submitted',
 SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + IFNULL(bursaryRequestItems.brItemPostage,0) + 
-IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total price',
+IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price',
 bRequestsStatus as 'Status' from bursaryRequests inner join itemsAndRequests 
 on itemsAndRequests.RequestID = bursaryRequests.bRequestsID and itemsAndRequests.StudentID = $userid
 and bursaryRequests.bRequestsCourseID = $courseid inner join course on course.courseTitle = $courseTitle
-and course.courseLevel = $courseLevel and course.courseStartDate = $courseStartDate inner join bursaryRequestItems 
-on bursaryRequestItems.brItemID = itemsAndRequests.ItemID and bursaryRequests.bRequestsStatus = $requestStatus
+and course.courseLevel = $courseLevel and course.courseYear = $courseYear inner join bursaryRequestItems 
+on bursaryRequestItems.brItemID = itemsAndRequests.ItemID and bursaryRequests.bRequestsStatus = $requestStatus 
 GROUP BY itemsAndRequests.RequestID ORDER BY bursaryRequests.bRequestsRequestDate ASC;*/
 
 /*-------------------------------------------------*/
@@ -297,7 +299,7 @@ inner join departmentsStaffCourseStudents on users.userID = departmentsStaffCour
 and departmentsStaffCourseStudents.bscsStaffID = 59021 
 inner join course on departmentsStaffCourseStudents.bscsCourseID = course.courseID and 
 course.courseTitle = "BCs Mechanical Engineering" and course.courseLevel = "4" and 
-course.courseStartDate = "2018-09-05" GROUP BY userID;
+course.courseYear = "2017/2018" GROUP BY userID;
 /*FOR PHP*/
 /*SELECT userID as "Student_ID", CONCAT(userFirstName, " ",userLastName) as "Student_name",
 student.availableBalance from users inner join student on users.userID = student.studentID
@@ -305,7 +307,7 @@ inner join departmentsStaffCourseStudents on users.userID = departmentsStaffCour
 and departmentsStaffCourseStudents.bscsStaffID = $userid 
 inner join course on departmentsStaffCourseStudents.bscsCourseID = course.courseID and 
 course.courseTitle = $txbCourseTitle and course.courseLevel = $txbCourseLevel and 
-course.courseStartDate = $txbCourseStartDate GROUP BY userID;*/
+course.courseYear = $txbCourseYear GROUP BY userID;*/
 
 /*-------------------------------------------------*/
 
@@ -328,3 +330,30 @@ VALUES(1,6,25432);*/
 VALUES($itemid,$requestid,$userid);*/
 
 /*-------------------------------------------------*/
+
+/*INSERT new staff bursary request info for specific student as DRAFT to specific course TEST*/
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest)
+VALUES ("HEMNG001",59021,"Spanner for each student.","2019-01-01","Draft",TRUE);*/
+/*FOR PHP*/
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest)
+VALUES ($courseid,$userid,$txbJustication,$dateNow,"Draft",TRUE);*/
+
+/*-------------------------------------------------*/
+
+/*-	SELECT all specific staff bursary requests which are DRAFTS, work out the item count for each of that request and the total price. 
+OUTPUT (Date submitted, item count and total price). TEST*/
+SELECT bRequestsRequestDate as "Request_Date", COUNT(itemsAndRequests.ItemID) as 'Item_count',
+SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + IFNULL(bursaryRequestItems.brItemPostage,0) + 
+IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price' from bursaryRequests
+inner join itemsAndRequests on itemsAndRequests.RequestID = bursaryRequests.bRequestsID
+inner join bursaryRequestItems on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+and bursaryRequests.bRequestsStaffRequest is TRUE and bursaryRequests.bRequestsStatus = "Draft"
+and bursaryRequests.bRequestsStaffID = 52354;
+/*FOR PHP*/
+/*SELECT bRequestsRequestDate as "Request_Date", COUNT(itemsAndRequests.ItemID) as 'Item_count',
+SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + IFNULL(bursaryRequestItems.brItemPostage,0) + 
+IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price' from bursaryRequests
+inner join itemsAndRequests on itemsAndRequests.RequestID = bursaryRequests.bRequestsID
+inner join bursaryRequestItems on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+and bursaryRequests.bRequestsStaffRequest is TRUE and bursaryRequests.bRequestsStatus = "Draft"
+and bursaryRequests.bRequestsStaffID = $userid;*/
