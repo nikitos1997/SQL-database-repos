@@ -88,32 +88,32 @@ INSERT INTO staff(staffID) VALUES (53270);
 INSERT INTO admin(adminID) VALUES (4561);
 
 #-------Course table insertion------------#
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEBCSIT111", "BCs Computer Science", "Information Technology", "Full_Time",'4', "2018-09-05", "2019-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEBCSIT112", "BCs Computer Science", "Information Technology", "Part_Time", '4', "2018-09-05", "2022-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEMNG001", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '4', "2018-09-05", "2019-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEHAIR001", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '4', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEBCSIT111", "BCs Computer Science", "Information Technology", "Full_Time",'4', "2017-09-05", "2018-06-30","2017/2018");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEBCSIT112", "BCs Computer Science", "Information Technology", "Part_Time", '4', "2017-09-05", "2018-06-30","2017/2018");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEMNG001", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '4', "2017-09-05", "2018-06-30","2017/2018");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEHAIR001", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '4', "2018-09-05", "2017-06-30","2018/2018");
 # - courseID is a gues here, based on new level
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEBCSIT121", "BCs Computer Science", "Information Technology", "Full_Time",'5', "2018-09-05", "2019-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEBCSIT122", "BCs Computer Science", "Information Technology", "Part_Time", '5', "2018-09-05", "2022-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEMNG011", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '5', "2018-09-05", "2019-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEHAIR011", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '5', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEBCSIT121", "BCs Computer Science", "Information Technology", "Full_Time",'5', "2018-09-05", "2019-06-30","2018/2019");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEBCSIT122", "BCs Computer Science", "Information Technology", "Part_Time", '5', "2018-09-05", "2019-06-30","2018/2019");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEMNG011", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '5', "2018-09-05", "2019-06-30","2018/2019");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEHAIR011", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '5', "2018-09-05", "2019-06-30","2018/2019");
 # - courseID is a gues here, based on new level
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEBCSIT131", "BCs Computer Science", "Information Technology", "Full_Time",'6', "2018-09-05", "2019-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEBCSIT132", "BCs Computer Science", "Information Technology", "Part_Time", '6', "2018-09-05", "2022-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEMNG021", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '6', "2018-09-05", "2019-06-30");
-INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate)
-VALUES ("HEHAIR021", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '6', "2018-09-05", "2019-06-30");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEBCSIT131", "BCs Computer Science", "Information Technology", "Full_Time",'6', "2019-09-05", "2020-06-30","2019/2020");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEBCSIT132", "BCs Computer Science", "Information Technology", "Part_Time", '6', "2019-09-05", "2020-06-30","2019/2020");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEMNG021", "BCs Mechanical Engineering", "Mechanical Engineering", "Full_Time", '6', "2019-09-05", "2020-06-30","2019/2020");
+INSERT INTO course(courseID, courseTitle, courseSubject, courseType, courseLevel, courseStartDate, courseEndDate, courseYear)
+VALUES ("HEHAIR021", "BCs Hair and beauty", "Hair and beauty", "Full_Time", '6', "2019-09-05", "2020-06-30","2019/2020");
 
 #-------Department table insertion------------#
 INSERT INTO department(departmentID,departmentName,departmentCampusName)
@@ -134,6 +134,28 @@ INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
 VALUES ("HEMNG001",25789,"Continuing");
 INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
 VALUES ("HEHAIR001",25432,"Continuing");
+
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEBCSIT131",29000,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEBCSIT132",293779,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEMNG011",27865,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEMNG011",25789,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEHAIR021",25432,"Continuing");
+
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEBCSIT121",29000,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEBCSIT122",293779,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEMNG021",27865,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEMNG021",25789,"Continuing");
+INSERT INTO studentToCourse(stcCourseID,stcStudentID,stcStudentStatus)
+VALUES ("HEHAIR011",25432,"Continuing");
 
 #-------Staff to department table insertion------------#
 INSERT INTO staffToDepartment(stDepartmentID,stStaffID)
@@ -196,4 +218,25 @@ VALUES("SiemensLincCol1002",59021,25789,"HEMNG001");
 INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
 VALUES("HairLincCol1111",53270,25432,"HEHAIR001");
 
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("CompLincCol1001",52354,29000,"HEBCSIT131");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("CompLincCol1001",52354,293779,"HEBCSIT132");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("SiemensLincCol1002",59021,27865,"HEMNG011");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("SiemensLincCol1002",59021,25789,"HEMNG011");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("HairLincCol1111",53270,25432,"HEHAIR021");
+
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("CompLincCol1001",52354,29000,"HEBCSIT121");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("CompLincCol1001",52354,293779,"HEBCSIT122");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("SiemensLincCol1002",59021,27865,"HEMNG021");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("SiemensLincCol1002",59021,25789,"HEMNG021");
+INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
+VALUES("HairLincCol1111",53270,25432,"HEHAIR011");
 # --END-- #

@@ -5,7 +5,11 @@
 ## Notes        :-
 ## last updated : 01/02/2019 by: Nick Skripnikov
 ## last updated : 07/02/2019 by: Mike Wright
+## last updated : 09/02/2019 by: Nick Skripnikov
+## last updated : 13/02/2019 by: Nick Skripnikov
 ## Change Log   :- Added course level into the ‘course’ table.
+## Change Log   :- change "bRequestsDraft" to "bRequestsStatus ENUM" in "bursaryRequests" table
+## Change Log   :- Added courseYear to the course table and changed stcStudentStatus to ENUM in studentToCourse table.
 
 DROP DATABASE IF EXISTS bursary_database;
 CREATE DATABASE bursary_database; /*Creating the database*/
@@ -62,6 +66,7 @@ CREATE TABLE course (
   courseSubject VARCHAR(25) NOT NULL,
   courseType ENUM('Full_Time', 'Part_Time') NOT NULL,
   courseLevel ENUM('4', '5','6') NOT NULL,
+  courseYear VARCHAR(9) NOT NULL,
   courseStartDate DATE NOT NULL,
   courseEndDate DATE NOT NULL,
   PRIMARY KEY (courseID)
@@ -72,7 +77,7 @@ DROP TABLE IF EXISTS studentToCourse CASCADE;
 CREATE TABLE studentToCourse (
   stcCourseID VARCHAR(255) NOT NULL, 
   stcStudentID INTEGER NOT NULL, 
-  stcStudentStatus VARCHAR(30) NOT NULL,
+  stcStudentStatus ENUM("Continuing","Transferred","Withdrawn") NOT NULL,
   PRIMARY KEY (stcCourseID, stcStudentID),
   FOREIGN KEY (stcStudentID) REFERENCES student(studentID),
   FOREIGN KEY (stcCourseID) REFERENCES course(courseID)
@@ -130,8 +135,8 @@ CREATE TABLE bursaryRequestItems (
   PRIMARY KEY (brItemID)
 );
 
-# Creating items with requests table table*/
-DROP TABLE IF EXISTS itemsAndRequests CASCADE;
+# Creating items with requests table*/
+DROP TABLE IF EXISTS itemsAndRequests;
 CREATE TABLE itemsAndRequests (
   ItemID INTEGER NOT NULL, 
   RequestID INTEGER NOT NULL, 
@@ -141,9 +146,12 @@ CREATE TABLE itemsAndRequests (
   Ordered BOOLEAN DEFAULT NULL,
   Delivered BOOLEAN DEFAULT NULL, 
   PRIMARY KEY(ItemID, RequestID, StudentID),
-  FOREIGN KEY(ItemID) REFERENCES bursaryRequestItems(brItemID),
-  FOREIGN KEY(RequestID) REFERENCES bursaryRequests(bRequestsID),
+  FOREIGN KEY(ItemID) REFERENCES bursaryRequestItems(brItemID)
+    ON DELETE CASCADE,
+  FOREIGN KEY(RequestID) REFERENCES bursaryRequests(bRequestsID)
+    ON DELETE CASCADE,
   FOREIGN KEY(StudentID) REFERENCES student(studentID)
+    ON DELETE CASCADE
 );
 
 # Creating a table that links departments, staff, courses and students together*/

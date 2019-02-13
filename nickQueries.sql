@@ -27,7 +27,7 @@ where userID = $userid;*/
 /*-------------------------------------------------*/
 
 /*Select course title of a specific student TEST*/
-SELECT courseTitle as 'Course' from course inner join studentToCourse
+SELECT DISTINCT courseTitle as 'Course' from course inner join studentToCourse
 on course.courseID = studentToCourse.stcCourseID inner join users 
 on users.userID = 293779 and studentToCourse.stcStudentID = 293779;
 /*FOR PHP*/
@@ -83,7 +83,7 @@ brItemURL as 'URL', brItemPrice as 'Price', brItemPostage as 'Postage',
 brItemAdditionalCharges as 'Additional charges' from bursaryRequestItems
 inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID 
 and itemsAndRequests.RequestID = 4
-and itemsAndRequests.StudentID = 25432;
+and itemsAndRequests.StudentID = 25432\G
 /*FOR PHP*/
 /*SELECT brItemCategory as 'Category', brItemDesc as 'Item description',
 brItemURL as 'URL', brItemPrice as 'Price', brItemPostage as 'Postage',
@@ -205,7 +205,7 @@ GROUP BY itemsAndRequests.RequestID ORDER BY bursaryRequests.bRequestsRequestDat
 /*-------------------------------------------------*/
 
 /*SELECT all Courses linked to specific student (FOR SELECTING) TEST*/
-SELECT courseTitle from course inner join studentToCourse on course.courseID = studentToCourse.stcCourseID
+SELECT DISTINCT courseTitle from course inner join studentToCourse on course.courseID = studentToCourse.stcCourseID
 and studentToCourse.stcStudentID = 293779;
 /*FOR PHP*/
 /*SELECT courseTitle from course inner join studentToCourse where course.courseID = studentToCourse.stcCourseID
@@ -214,11 +214,11 @@ and studentToCourse.stcStudentID = $userid;*/
 /*-------------------------------------------------*/
 
 /*-	SELECT all Years linked to specific student (FOR SELECTING) TEST*/
-SELECT courseStartDate as 'Start_date' from course inner join studentToCourse
-on course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = 29000;
+SELECT courseYear as 'Year' from course 
+inner join studentToCourse on course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = 29000;
 /*FOR PHP*/
-/*SELECT courseStartDate as 'Start date' from course inner join studentToCourse
-where course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = $userid;*/
+/*SELECT courseYear as 'Year' from course 
+inner join studentToCourse on course.courseID = studentToCourse.stcCourseID and studentToCourse.stcStudentID = $userid;*/
 
 /*-------------------------------------------------*/
 
@@ -271,7 +271,7 @@ VALUES ($courseid,$userid,$txbJustication,$dateNow,"Draft",TRUE);*/
 /*-------------------------------------------------*/
 
 /*SELECT Tutor name relating to specific student TEST*/
-SELECT CONCAT(userFirstName, " ", userLastName) as 'Tutor' from users
+SELECT DISTINCT CONCAT(userFirstName, " ", userLastName) as 'Tutor' from users
 inner join departmentsStaffCourseStudents on users.userID = departmentsStaffCourseStudents.bscsStaffID
 and departmentsStaffCourseStudents.bscsStudentID = 293779;
 /*FOR PHP*/
