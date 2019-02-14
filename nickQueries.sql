@@ -13,6 +13,9 @@
 ## change made  :- New queries added and tested
 ## last updated : 13/02/2019
 ## change made  :- New queries added, tested and updated due to database course table change
+## last updated : 14/02/2019
+## change made  :- New queries added and tested
+
 
 
 /*Nicks queries*/
@@ -132,8 +135,9 @@ brItemAdditionalCharges = "" where brItemID = 1; FOR TEST*/
 /*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
 VALUES(1,1,293779);*/
 /*FOR PHP*/
-/*UPDATE bursaryRequestItems SET brItemCategory = "",brItemDesc = "",brItemURL = "",brItemPrice = "", brItemPostage = "", 
-brItemAdditionalCharges = "" where brItemID = $itemid;*/
+/*UPDATE bursaryRequestItems SET brItemCategory = $ItemCategory,
+brItemDesc = $itemDesc,brItemURL = $itemURL,brItemPrice = $itemPrice, brItemPostage = $itemPostage, 
+brItemAdditionalCharges = $itemAdditonalCharges where brItemID = $itemid;*/
 /*INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
 VALUES($itemid,$requestid,$userid);*/
 
@@ -340,6 +344,13 @@ VALUES ($courseid,$userid,$txbJustication,$dateNow,"Draft",TRUE);*/
 
 /*-------------------------------------------------*/
 
+/*INSERT a new bursary staff request as Staff approved (Submitted by staff) TEST */
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest)
+VALUES ("HEMNG001",52354,"Spanner for each student.","2019-01-01","Submitted",TRUE);*/
+/*FOR PHP*/
+/*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest)
+VALUES ($courseid,$userid,$txbJustication,$dateNow,"Submitted",TRUE)*/
+
 /*-	SELECT all specific staff bursary requests which are DRAFTS, work out the item count for each of that request and the total price. 
 OUTPUT (Date submitted, item count and total price). TEST*/
 SELECT bRequestsRequestDate as "Request_Date", COUNT(itemsAndRequests.ItemID) as 'Item_count',
@@ -357,3 +368,44 @@ inner join itemsAndRequests on itemsAndRequests.RequestID = bursaryRequests.bReq
 inner join bursaryRequestItems on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
 and bursaryRequests.bRequestsStaffRequest is TRUE and bursaryRequests.bRequestsStatus = "Draft"
 and bursaryRequests.bRequestsStaffID = $userid;*/
+
+/*-------------------------------------------------*/
+
+/*UPDATE a new staff bursary request info as a DRAFT (SAVING A DRAFT AGAIN-SPECIFIC REQUEST) TEST */
+/*UPDATE bursaryRequests SET bRequestsJustification = "bla bla bla", bRequestsCourseID = "HEBCSIT111", 
+bRequestsStatus="Draft" where bRequestsID = 1 and bRequestsStaffRequest is TRUE;*/
+/*FOR PHP*/
+/*UPDATE bursaryRequests SET bRequestsJustification = $txbJustication, bRequestsCourseID = $courseid, 
+bRequestsStatus=$requestStatus where bRequestsID = $requestid and bRequestsStaffRequest is TRUE;*/
+
+/*-------------------------------------------------*/
+
+/*OUTPUT specific bursary request of a specific staff member (DRAFT) TEST*/
+SELECT courseTitle, CONCAT(userFirstName, " ", userLastName) as 'Tutor',
+bRequestsJustification as 'Justification', 
+bRequestsTutorComments as 'Tutor comments', 
+bRequestsAdminComments as 'Admin comments', 
+bRequestsRequestDate as 'Request date',
+bRequestsStatus as 'Status' from bursaryRequests
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID
+inner join users on users.userID = bursaryRequests.bRequestsStaffID
+inner join itemsAndRequests on itemsAndRequests.RequestID = 1 
+and bursaryRequests.bRequestsID = 1 and bRequestsStatus = "Draft" and bRequestsStaffRequest is TRUE
+and bRequestsStaffID = 52354
+and itemsAndRequests.StudentID = 29000;
+/*PHP*/
+/*SELECT courseTitle, CONCAT(userFirstName, " ", userLastName) as 'Tutor',
+bRequestsJustification as 'Justification', 
+bRequestsTutorComments as 'Tutor comments', 
+bRequestsAdminComments as 'Admin comments', 
+bRequestsRequestDate as 'Request date',
+bRequestsStatus as 'Status' from bursaryRequests
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID
+inner join users on users.userID = bursaryRequests.bRequestsStaffID
+inner join itemsAndRequests on itemsAndRequests.RequestID = $requestid
+and bursaryRequests.bRequestsID = $requestid and bRequestsStatus = "Draft" and bRequestsStaffRequest is TRUE
+and bRequestsStaffID = $userid
+and itemsAndRequests.StudentID = $userid;*/
+
+/*-------------------------------------------------*/
+
