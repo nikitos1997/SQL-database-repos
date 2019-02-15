@@ -15,6 +15,8 @@
 ## change made  :- New queries added, tested and updated due to database course table change
 ## last updated : 14/02/2019
 ## change made  :- New queries added and tested
+## last updated : 15/02/2019
+## change made  :- New queries added and tested
 
 
 
@@ -351,7 +353,7 @@ VALUES ("HEMNG001",52354,"Spanner for each student.","2019-01-01","Submitted",TR
 /*INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest)
 VALUES ($courseid,$userid,$txbJustication,$dateNow,"Submitted",TRUE)*/
 
-/*-	SELECT all specific staff bursary requests which are DRAFTS, work out the item count for each of that request and the total price. 
+/*SELECT all specific staff bursary requests which are DRAFTS, work out the item count for each of that request and the total price. 
 OUTPUT (Date submitted, item count and total price). TEST*/
 SELECT bRequestsRequestDate as "Request_Date", COUNT(itemsAndRequests.ItemID) as 'Item_count',
 SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + IFNULL(bursaryRequestItems.brItemPostage,0) + 
@@ -389,10 +391,10 @@ bRequestsRequestDate as 'Request date',
 bRequestsStatus as 'Status' from bursaryRequests
 inner join course on bursaryRequests.bRequestsCourseID = course.courseID
 inner join users on users.userID = bursaryRequests.bRequestsStaffID
-inner join itemsAndRequests on itemsAndRequests.RequestID = 1 
-and bursaryRequests.bRequestsID = 1 and bRequestsStatus = "Draft" and bRequestsStaffRequest is TRUE
+inner join itemsAndRequests on itemsAndRequests.RequestID = 5 
+and bursaryRequests.bRequestsID = 5 and bRequestsStatus = "Draft" and bRequestsStaffRequest is TRUE
 and bRequestsStaffID = 52354
-and itemsAndRequests.StudentID = 29000;
+and itemsAndRequests.StudentID = 27865;
 /*PHP*/
 /*SELECT courseTitle, CONCAT(userFirstName, " ", userLastName) as 'Tutor',
 bRequestsJustification as 'Justification', 
@@ -406,6 +408,125 @@ inner join itemsAndRequests on itemsAndRequests.RequestID = $requestid
 and bursaryRequests.bRequestsID = $requestid and bRequestsStatus = "Draft" and bRequestsStaffRequest is TRUE
 and bRequestsStaffID = $userid
 and itemsAndRequests.StudentID = $userid;*/
+
+/*-------------------------------------------------*/
+
+/*OUTPUT all items linked to a specific staff DRAFT bursary request of a specific staff member TEST*/
+SELECT brItemCategory as "Category", brItemDesc as "Item_description",
+brItemURL as "Item_URL",brItemPrice as "Price",brItemPostage as "Postage",brItemAdditionalCharges as "Additional_charges"
+from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+inner join bursaryRequests on itemsAndRequests.RequestID = bursaryRequests.bRequestsID
+and bursaryRequests.bRequestsStaffRequest is TRUE and bursaryRequests.bRequestsStatus = "Draft"
+and bursaryRequests.bRequestsStaffID = 52354 and bursaryRequests.bRequestsID = 5 \G;
+/*FOR PHP*/
+/*SELECT brItemCategory as "Category", brItemDesc as "Item_description",
+brItemURL as "Item_URL",brItemPrice as "Price",brItemPostage as "Postage",brItemAdditionalCharges as "Additional_charges"
+from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+inner join bursaryRequests on itemsAndRequests.RequestID = bursaryRequests.bRequestsID
+and bursaryRequests.bRequestsStaffRequest is TRUE and bursaryRequests.bRequestsStatus = "Draft"
+and bursaryRequests.bRequestsStaffID = $userid and bursaryRequests.bRequestsID = $requestid \G;*/
+
+/*---------------------END OF STAFF QUERIES----------------------------*/
+
+/*------------------ADMIN QUERIES-------------------------------*/
+
+/*Select admin name (First name + Last name) of a specific admin member. TEST */
+SELECT CONCAT(userFirstName," ",userLastName) as "Name" from users where userID = 4561 and userType = "Admin";
+/*FOR PHP*/
+/*SELECT CONCAT(userFirstName," ",userLastName) as "Name" from users where userID = $userid and userType = "Admin";*/
+
+/*-------------------------------------------------*/
+
+/*COUNT all requests that are under “Submitted status”. TEST */
+SELECT COUNT(bRequestsID) as "Submitted" from bursaryRequests 
+where bRequestsStaffApproved = "Yes" and bRequestsAdminApproved is NULL 
+and bRequestsStatus = "Submitted";
+/*FOR PHP*/
+/*SELECT COUNT(bRequestsID) as "Submitted" from bursaryRequests 
+where bRequestsStaffApproved = "Yes" and bRequestsAdminApproved is NULL 
+and bRequestsStatus = "Submitted";*/
+
+/*-------------------------------------------------*/
+
+/*COUNT all requests that are under “Approved status”. TEST */
+SELECT COUNT(bRequestsID) as "Approved" from bursaryRequests
+where bRequestsStaffApproved = "Yes" and bRequestsAdminApproved = "Yes"
+and bRequestsStatus = "Approved";
+/*FOR PHP*/
+/*SELECT COUNT(bRequestsID) as "Approved" from bursaryRequests
+where bRequestsStaffApproved = "Yes" and bRequestsAdminApproved = "Yes"
+and bRequestsStatus = "Approved";*/
+
+/*-------------------------------------------------*/
+
+/*COUNT all items from all requests that are “Ordered”. TEST */
+SELECT COUNT(ItemID) as "Awaiting_Delivery" from itemsAndRequests
+where itemsAndRequests.StaffItemApproved = "Yes" and itemsAndRequests.AdminItemApproved = "Yes"
+and itemsAndRequests.Ordered is TRUE and itemsAndRequests.Delivered is NULL;
+/*FOR PHP*/
+/*SELECT COUNT(ItemID) as "Awaiting_Delivery" from itemsAndRequests
+where itemsAndRequests.StaffItemApproved = "Yes" and itemsAndRequests.AdminItemApproved = "Yes"
+and itemsAndRequests.Ordered is TRUE and itemsAndRequests.Delivered is NULL;*/
+
+/*-------------------------------------------------*/
+
+/*Select all staff names (First name + last name)- TEST*/
+SELECT CONCAT(userFirstName, " ",userLastName) as "Staff_name" from users
+where userType = "Staff";
+/*FOR PHP*/
+/*SELECT CONCAT(userFirstName, " ",userLastName) as "Staff_name" from users
+where userType = "Staff";*/
+
+/*-------------------------------------------------*/
+
+/*Select all STAFF requests that belong to specific course title, course year, level, status and specific staff member 
+OUTPUT: StudentID, Staff name, Date submitted, total price of all items of that request, 
+student available balance and status of the request TEST*/
+SELECT student.studentID as "Student_ID", CONCAT(users.userFirstName, " ",users.userLastName) as "Staff name",
+bursaryRequests.bRequestsRequestDate as "Date_submitted", SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + 
+IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Cost',
+student.availableBalance as "Available_balance",bursaryRequests.bRequestsStatus as "Status" from users
+inner join bursaryRequests on users.userID = bursaryRequests.bRequestsStaffID and users.userType = "Staff"
+inner join itemsAndRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
+inner join student on itemsAndRequests.StudentID = student.studentID
+inner join bursaryRequestItems on bursaryRequestItems.brItemID = itemsAndRequests.ItemID
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = "BCs Mechanical Engineering"
+and course.courseLevel = "4" and course.courseYear = "2017/2018"
+and bursaryRequests.bRequestsStaffID = 52354 and bursaryRequests.bRequestsStatus = "Submitted"
+and bursaryRequests.bRequestsStaffRequest is TRUE 
+GROUP BY student.studentID;
+/*FOR PHP*/
+/*SELECT student.studentID as "Student_ID", CONCAT(users.userFirstName, " ",users.userLastName) as "Staff name",
+bursaryRequests.bRequestsRequestDate as "Date_submitted", SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + 
+IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Cost',
+student.availableBalance as "Available_balance",bursaryRequests.bRequestsStatus as "Status" from users
+inner join bursaryRequests on users.userID = bursaryRequests.bRequestsStaffID and users.userType = "Staff"
+inner join itemsAndRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
+inner join student on itemsAndRequests.StudentID = student.studentID
+inner join bursaryRequestItems on bursaryRequestItems.brItemID = itemsAndRequests.ItemID
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = $courseTitle
+and course.courseLevel = $courseLevel and course.courseYear = $courseYear
+and bursaryRequests.bRequestsStaffID = $userid and bursaryRequests.bRequestsStatus = $requestStatus
+and bursaryRequests.bRequestsStaffRequest is TRUE 
+GROUP BY student.studentID;*/
+
+/*-------------------------------------------------*/
+
+/*Mark a staff specific bursary request as status “Accepted” and approved by admin. TEST */
+/*UPDATE bursaryRequests SET bRequestsAdminApproved = "Yes", bRequestsStatus = "Approved"
+where bRequestsStaffRequest is TRUE and bRequestsID = 6;*/
+/*FOR PHP*/
+/*UPDATE bursaryRequests SET bRequestsAdminApproved = "Yes", bRequestsStatus = "Approved"
+where bRequestsStaffRequest is TRUE and bRequestsID = $requestid;*/
+
+/*-------------------------------------------------*/
+
+/*Mark a staff specific bursary request as status “Submitted” and not approved by admin. TEST*/
+/*UPDATE bursaryRequests SET bRequestsAdminApproved = "No", bRequestsStatus = "Submitted"
+where bRequestsStaffRequest is TRUE and bRequestsID = 1; */
+/*FOR PHP*/
+/*UPDATE bursaryRequests SET bRequestsAdminApproved = "No", bRequestsStatus = "Submitted"
+where bRequestsStaffRequest is TRUE and bRequestsID = $requestid;*/
 
 /*-------------------------------------------------*/
 

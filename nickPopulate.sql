@@ -179,6 +179,14 @@ VALUES ("HEHAIR001",53270,"Shampoo and hair brush for practicals.","2019-01-01",
 INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest)
 VALUES ("HEMNG001",52354,"Spanner for each student.","2019-01-01","Draft",TRUE);
 
+/*For outputting all submitted requests for admin*/
+INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest,bRequestsStaffApproved)
+VALUES ("HEMNG001",52354,"Spanner for each student.","2019-01-01","Submitted",TRUE,"Yes");
+
+/*For outputting all approved requests for admin*/
+INSERT INTO bursaryRequests(bRequestsCourseID,bRequestsStaffID,bRequestsJustification,bRequestsRequestDate,bRequestsStatus,bRequestsStaffRequest,bRequestsStaffApproved,bRequestsAdminApproved)
+VALUES ("HEMNG001",53270,"Spanner for each student.","2019-01-01","Approved",TRUE,"Yes","Yes");
+
 #-------Bursary request items table insertion------------#
 /*Bursary funds can be spent on any of the following:
 Additional qualifications (eg. FA Level 1, First Aid, Level 2 Safeguarding)
@@ -205,8 +213,8 @@ INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID,StaffItemApproved)/*Staf
 VALUES(3,3,27865,"Yes");
 INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID,StaffItemApproved)/*Staff approved because of bulk order from staff*/
 VALUES(3,3,25789,"Yes");
-INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
-VALUES(4,4,25432);
+INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID,StaffItemApproved,AdminItemApproved,Ordered)
+VALUES(4,4,25432,"Yes","Yes",TRUE);
 INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID)
 VALUES(5,4,25432);
 
@@ -220,6 +228,13 @@ INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID,StaffItemApproved)
 VALUES(2,5,27865,"Yes");
 INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID,StaffItemApproved)
 VALUES(2,5,25789,"Yes");
+
+INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID,StaffItemApproved)
+VALUES(2,6,25789,"Yes");
+INSERT INTO itemsAndRequests(ItemID,RequestID,StudentID,StaffItemApproved)
+VALUES(2,6,27865,"Yes");
+
+
 
 #-------Departments,Staff,Course and Students table insertion------------#
 INSERT INTO departmentsStaffCourseStudents(bscsDepartmentID,bscsStaffID,bscsStudentID,bscsCourseID)
