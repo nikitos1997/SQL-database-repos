@@ -530,3 +530,46 @@ where bRequestsStaffRequest is TRUE and bRequestsID = $requestid;*/
 
 /*-------------------------------------------------*/
 
+/*-	Select all student bursary request items that are based on particular status, course title, course year, course level 
+and belong to specific student name OUTPUT: StudentID, RequestID, Submission date, ItemID, total price of the item.*/
+SELECT users.userID as "Student_ID", bursaryRequests.bRequestsID as "RequestID", 
+bursaryRequests.bRequestsRequestDate as "Submission_date", bursaryRequestItems.brItemID,
+SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + 
+IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price'
+from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+and itemsAndRequests.Ordered is TRUE and itemsAndRequests.Delivered is NULL and itemsAndRequests.StaffItemApproved = "Yes"
+inner join bursaryRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
+and bursaryRequests.bRequestsStudentRequest is TRUE 
+inner join users on users.userID = itemsAndRequests.StudentID and users.userFirstName = "Jessica" 
+and users.userLastName ="Roberts" and users.userType = "Student"
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = "BCs Hair and beauty"
+and course.courseYear = "2018/2019" and course.courseLevel = "4"
+GROUP BY itemsAndRequests.ItemID;
+/*FOR PHP*/
+/*SELECT users.userID as "Student_ID", bursaryRequests.bRequestsID as "RequestID", 
+bursaryRequests.bRequestsRequestDate as "Submission_date", bursaryRequestItems.brItemID,
+SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + 
+IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price'
+from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+and itemsAndRequests.Ordered is ? and itemsAndRequests.Delivered is ? and itemsAndRequests.StaffItemApproved = "Yes"
+inner join bursaryRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
+and bursaryRequests.bRequestsStudentRequest is TRUE 
+inner join users on users.userID = itemsAndRequests.StudentID and users.userFirstName = $userFirstName 
+and users.userLastName =$userLastName and users.userType = "Student"
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = $courseTitle
+and course.courseYear = $courseYear and course.courseLevel = $courseLevel
+GROUP BY itemsAndRequests.ItemID;*/
+
+/*-------------------------------------------------*/
+
+/*Mark a specific item that has been accepted, as “Ordered”. TEST */
+/*UPDATE itemsAndRequests SET Ordered = TRUE where ItemID = 4 and AdminItemApproved = "Yes"; */
+/*FOR PHP*/
+/*UPDATE itemsAndRequests SET Ordered = TRUE where ItemID = $itemid and AdminItemApproved = "Yes";*/
+
+/*-------------------------------------------------*/
+
+/*Mark a specific item that has been ordered, as “Delivered”. TEST */
+/*UPDATE itemsAndRequests SET Delivered = TRUE where ItemID = 4 and AdminItemApproved = "Yes" and Ordered is TRUE; */
+/*FOR PHP*/
+/*UPDATE itemsAndRequests SET Delivered = TRUE where ItemID = $itemid and AdminItemApproved = "Yes" and Ordered is TRUE;*/
