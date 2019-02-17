@@ -17,6 +17,8 @@
 ## change made  :- New queries added and tested
 ## last updated : 15/02/2019
 ## change made  :- New queries added and tested
+## last updated : 17/02/2019
+## change made  :- New queries added and tested
 
 
 
@@ -538,8 +540,9 @@ SUM(IFNULL(bursaryRequestItems.brItemPrice,0) +
 IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price'
 from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
 and itemsAndRequests.Ordered is TRUE and itemsAndRequests.Delivered is NULL and itemsAndRequests.StaffItemApproved = "Yes"
+and itemsAndRequests.AdminItemApproved = "Yes"
 inner join bursaryRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
-and bursaryRequests.bRequestsStudentRequest is TRUE 
+and bursaryRequests.bRequestsStudentRequest is TRUE and bursaryRequests.bRequestsStatus = "Approved"
 inner join users on users.userID = itemsAndRequests.StudentID and users.userFirstName = "Jessica" 
 and users.userLastName ="Roberts" and users.userType = "Student"
 inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = "BCs Hair and beauty"
@@ -552,8 +555,9 @@ SUM(IFNULL(bursaryRequestItems.brItemPrice,0) +
 IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price'
 from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
 and itemsAndRequests.Ordered is ? and itemsAndRequests.Delivered is ? and itemsAndRequests.StaffItemApproved = "Yes"
+and itemsAndRequests.AdminItemApproved = "Yes"
 inner join bursaryRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
-and bursaryRequests.bRequestsStudentRequest is TRUE 
+and bursaryRequests.bRequestsStudentRequest is TRUE and bursaryRequests.bRequestsStatus = "Approved"
 inner join users on users.userID = itemsAndRequests.StudentID and users.userFirstName = $userFirstName 
 and users.userLastName =$userLastName and users.userType = "Student"
 inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = $courseTitle
@@ -573,3 +577,54 @@ GROUP BY itemsAndRequests.ItemID;*/
 /*UPDATE itemsAndRequests SET Delivered = TRUE where ItemID = 4 and AdminItemApproved = "Yes" and Ordered is TRUE; */
 /*FOR PHP*/
 /*UPDATE itemsAndRequests SET Delivered = TRUE where ItemID = $itemid and AdminItemApproved = "Yes" and Ordered is TRUE;*/
+
+/*-------------------------------------------------*/
+
+/*Select all staff bursary request items that are based on a particular status, course title, course year, course level 
+and specific student name OUTPUT: StaffID, RequestID, Submission date, StudentID, ItemID and total price of an item. TEST */
+SELECT bursaryRequests.bRequestsStaffID as "Staff_ID", bursaryRequests.bRequestsID as "RequestID",
+bursaryRequests.bRequestsRequestDate as "Submission_date", 
+users.userID as "Student_ID", bursaryRequestItems.brItemID,
+SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + 
+IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price'
+from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+and itemsAndRequests.Ordered is NULL and itemsAndRequests.Delivered is NULL and itemsAndRequests.StaffItemApproved = "Yes"
+and itemsAndRequests.AdminItemApproved = "Yes"
+inner join bursaryRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
+and bursaryRequests.bRequestsStaffRequest is TRUE and bursaryRequests.bRequestsStatus = "Approved"
+inner join users on users.userID = itemsAndRequests.StudentID and users.userFirstName = "Andrius" 
+and users.userLastName ="Williams" and users.userType = "Student"
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = "BCs Mechanical Engineering"
+and course.courseYear = "2017/2018" and course.courseLevel = "4"
+GROUP BY bursaryRequests.bRequestsID;
+/*FOR PHP*/
+/*SELECT bursaryRequests.bRequestsStaffID as "Staff_ID", bursaryRequests.bRequestsID as "RequestID",
+bursaryRequests.bRequestsRequestDate as "Submission_date", 
+users.userID as "Student_ID", bursaryRequestItems.brItemID,
+SUM(IFNULL(bursaryRequestItems.brItemPrice,0) + 
+IFNULL(bursaryRequestItems.brItemPostage,0) + IFNULL(bursaryRequestItems.brItemAdditionalCharges,0)) as 'Total_price'
+from bursaryRequestItems inner join itemsAndRequests on itemsAndRequests.ItemID = bursaryRequestItems.brItemID
+and itemsAndRequests.Ordered is ? and itemsAndRequests.Delivered is ? and itemsAndRequests.StaffItemApproved = "Yes"
+and itemsAndRequests.AdminItemApproved = "Yes"
+inner join bursaryRequests on bursaryRequests.bRequestsID = itemsAndRequests.RequestID
+and bursaryRequests.bRequestsStaffRequest is TRUE and bursaryRequests.bRequestsStatus = "Approved"
+inner join users on users.userID = itemsAndRequests.StudentID and users.userFirstName = $userFirstName 
+and users.userLastName =$userLastName and users.userType = "Student"
+inner join course on bursaryRequests.bRequestsCourseID = course.courseID and course.courseTitle = $courseTitle
+and course.courseYear = $courseYear and course.courseLevel = $courseLevel
+GROUP BY bursaryRequests.bRequestsID;*/
+
+/*-------------------------------------------------*/
+
+/*Mark a particular admin as accepted/not accepted the agreement form TEST*/
+/*UPDATE users SET users.userAgreementGDPR = 1 where users.userID = 4561 and users.userType = "Admin"; */
+/*FOR PHP*/
+/*UPDATE users SET users.userAgreementGDPR = $agreementGDPR where users.userID = $userid and users.userType = "Admin";*/
+
+/*-------------------------------------------------*/
+
+
+/*For displaying distinct course of staff member PHP*/
+/*SELECT DISTINCT course.courseTitle from course 
+inner join departmentsStaffCourseStudents on course.courseID = departmentsStaffCourseStudents.bscsCourseID
+and departmentsStaffCourseStudents.bscsStaffID = $userid; */
